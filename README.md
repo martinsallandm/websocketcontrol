@@ -20,4 +20,12 @@ $ python my_controller.py
 
 Documentação e tutoriais
 
+Interface de usuário
 > https://wiki.python.org/moin/PyQt
+
+> https://www.pythonguis.com/pyqt6-tutorial/
+
+Desenhar os gráficos
+> https://www.pyqtgraph.org/
+
+> https://www.pythonguis.com/tutorials/plotting-pyqtgraph/
