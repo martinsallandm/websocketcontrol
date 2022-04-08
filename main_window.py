@@ -110,7 +110,12 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addWidget(self.doubleBoxOffset)
         self.verticalLayout_8.addLayout(self.verticalLayout_7)
         self.verticalLayout_9.addLayout(self.verticalLayout_8)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(
+            20,
+            40,
+            QtWidgets.QSizePolicy.Policy.Minimum,
+            QtWidgets.QSizePolicy.Policy.Expanding,
+        )
         self.verticalLayout_9.addItem(spacerItem)
         self.horizontalLayout.addLayout(self.verticalLayout_9)
         self.line_2 = QtWidgets.QFrame(self.centralwidget)
@@ -118,10 +123,6 @@ class Ui_MainWindow(object):
         self.line_2.setFrameShadow(QtWidgets.QFrame.Shadow.Sunken)
         self.line_2.setObjectName("line_2")
         self.horizontalLayout.addWidget(self.line_2)
-        self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
-        self.graphicsView.setObjectName("graphicsView")
-        self.horizontalLayout.addWidget(self.graphicsView)
-        self.horizontalLayout_2.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 22))
