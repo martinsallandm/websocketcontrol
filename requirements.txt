@@ -72,6 +72,7 @@ pyparsing==3.0.7
 PyQt6==6.2.3
 PyQt6-Qt6==6.2.4
 PyQt6-sip==13.2.1
+pyqtgraph==0.12.4
 pyrsistent==0.18.1
 python-dateutil==2.8.2
 python-lsp-jsonrpc==1.0.0
@@ -80,6 +81,7 @@ pytz==2021.3
 pyzmq==22.3.0
 requests==2.27.1
 rope==0.23.0
+scipy==1.8.0
 Send2Trash==1.8.0
 six==1.16.0
 sniffio==1.2.0
