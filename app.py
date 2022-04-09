@@ -1,8 +1,5 @@
-from PyQt6 import QtWidgets, QtCore, QtGui
-import pyqtgraph as pg
+from PyQt6 import QtWidgets, QtGui
 import sys  # We need sys so that we can pass argv to QApplication
-import numpy as np
-from scipy import signal
 
 from main_window import Ui_MainWindow
 
