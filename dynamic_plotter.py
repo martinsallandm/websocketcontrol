@@ -4,7 +4,6 @@ from scipy import signal
 
 import collections
 import time
-import math
 import numpy as np
 
 # Original script at
