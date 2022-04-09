@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
+from dynamic_plotter import DynamicPlotter
+from main_window import Ui_MainWindow
+import sys  # We need sys so that we can pass argv to QApplication
+from PyQt6 import QtWidgets, QtGui
+import app
 import asyncio
 import threading
 import websockets
+import time
 
 from queue import Queue
 
@@ -17,8 +23,9 @@ async def echo(websocket):
             # print("Reference: " + received[1])
             await websocket.send("get outputs")
             received = (await websocket.recv()).split(",")
-            print("Outputs: " + received[1])
-            queue.put(received)
+            #print("Outputs: " + received[1])
+            queue.put(received[1])
+            time.sleep(0.2)
         except Exception as e:
             print(e)
             return
@@ -30,7 +37,7 @@ async def foo():
 
 
 def view():
-    while True:
+    '''while True:
         try:
             if not queue.empty():
                 print("oi")
@@ -38,12 +45,20 @@ def view():
                 print(view)
         except Exception as e:
             print(e)
-            return
+            return'''
+
+    gui = QtWidgets.QApplication(sys.argv)
+
+    window = app.MainWindow(queue)
+    window.setWindowIcon(QtGui.QIcon("qtui/feedback.png"))
+    window.show()
+    gui.exec()
 
 
 server = websockets.serve(echo, "localhost", 6660)
 asyncio.get_event_loop().run_until_complete(server)
 y = threading.Thread(target=view)
 y.start()
+
 asyncio.get_event_loop().run_forever()
 y.join()

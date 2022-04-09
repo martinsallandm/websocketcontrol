@@ -4,14 +4,15 @@ import sys  # We need sys so that we can pass argv to QApplication
 from main_window import Ui_MainWindow
 
 from dynamic_plotter import DynamicPlotter
+from queue import Queue
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self, *args, obj=None, **kwargs):
+    def __init__(self, queue, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
-        self.dynamic_plotter = DynamicPlotter(self.centralWidget, 0.01)
+        self.dynamic_plotter = DynamicPlotter(self.centralWidget, queue, 0.01)
 
         self.graphWidget = self.dynamic_plotter.get_plot_widget()
         self.graphWidget.setObjectName("graphWidget")
@@ -67,9 +68,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.dynamic_plotter.set_offset(value)
 
 
+'''queue = Queue(maxsize=100)
+
+queue.put(1)
+queue.put(-1)
+queue.put(13)
+queue.put(2.1)
+queue.put(1.7)
+queue.put(0.1)
+
 app = QtWidgets.QApplication(sys.argv)
 
-window = MainWindow()
+window = MainWindow(queue)
 window.setWindowIcon(QtGui.QIcon("qtui/feedback.png"))
 window.show()
-app.exec()
+app.exec()'''

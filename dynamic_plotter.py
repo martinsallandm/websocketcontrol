@@ -1,6 +1,7 @@
 from pyqtgraph.Qt import QtCore
 import pyqtgraph as pg
 from scipy import signal
+from queue import Queue
 
 import collections
 import time
@@ -12,7 +13,7 @@ import numpy as np
 
 class DynamicPlotter:
     def __init__(
-            self, widget, sampleinterval=0.1, timewindow=10.0,
+            self, widget, queue, sampleinterval=0.1, timewindow=10.0,
             size=(600, 350)):
         # Data stuff
         self._interval = int(sampleinterval * 1000)
@@ -33,7 +34,7 @@ class DynamicPlotter:
         self.minAmplitude = 0.0
         self.period = 2*np.pi
         self.offset = 0.0
-
+        self.queue = queue
         # QTimer
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updateplot)
@@ -58,30 +59,35 @@ class DynamicPlotter:
         return self.plt
 
     def get_data(self):
-        return getattr(self, self.plot_func)(time.time())
+        return getattr(self, self.plot_func)(time.time(), self.queue)
 
     def updateplot(self):
         self.databuffer.append(self.get_data())
         self.y[:] = self.databuffer
         self.curve.setData(self.x, self.y)
 
-    def step(self, t=None):
+    def step(self, t, queue):
         return self.maxAmplitude
 
-    def sine(self, t):
+    def sine(self, t, queue):
         return self.maxAmplitude * np.sin(
             (2*np.pi/self.period)*t
         ) + self.offset*np.ones_like(t)
 
-    def square(self, t):
+    def square(self, t, queue):
         return self.maxAmplitude * signal.square(
             (2*np.pi/self.period)*t
         ) + self.offset
 
-    def sawtooth(self, t):
+    def sawtooth(self, t, queue):
         return self.maxAmplitude * signal.sawtooth(
             (2*np.pi/self.period)*t
         ) + self.offset
 
-    def random(self, t):
+    def random(self, t, queue):
         return self.maxAmplitude
+
+    def input(self, t, queue):
+        if not queue.empty():
+            return queue.get()
+        return 0
