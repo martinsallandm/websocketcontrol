@@ -32,7 +32,6 @@ async def foo():
 def view():
     while True:
         try:
-            #print("estou vivo")
             if not queue.empty():
                 print("oi")
                 view = queue.get()
