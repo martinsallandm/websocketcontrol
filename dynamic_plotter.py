@@ -35,6 +35,7 @@ class DynamicPlotter:
         self.period = 2*np.pi
         self.offset = 0.0
         self.queue = queue
+        self.last_value = 0.0
         # QTimer
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updateplot)
@@ -89,5 +90,5 @@ class DynamicPlotter:
 
     def input(self, t, queue):
         if not queue.empty():
-            return queue.get()
-        return 0
+            self.last_value = queue.get()
+        return self.last_value
