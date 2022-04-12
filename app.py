@@ -1,5 +1,6 @@
 from PyQt6 import QtWidgets, QtGui
 import sys  # We need sys so that we can pass argv to QApplication
+import os
 
 from main_window import Ui_MainWindow
 
@@ -66,6 +67,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def change_offset(self, value):
         self.dynamic_plotter.set_offset(value)
+
+    def closeEvent(self, event):
+        os._exit(1)
 
 
 '''queue = Queue(maxsize=100)

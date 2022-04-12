@@ -13,7 +13,7 @@ import numpy as np
 
 class DynamicPlotter:
     def __init__(
-            self, widget, queue, sampleinterval=0.1, timewindow=10.0,
+            self, widget, queue, sampleinterval=0.05, timewindow=10.0,
             size=(600, 350)):
         # Data stuff
         self._interval = int(sampleinterval * 1000)
@@ -23,7 +23,7 @@ class DynamicPlotter:
         self.x = np.linspace(0.0, timewindow, self._bufsize)
         self.y = np.zeros(self._bufsize, dtype=np.float)
         self.plt = pg.PlotWidget(widget)
-        self.plt.setYRange(-1.0, 1.0)
+        self.plt.setYRange(-100.0, 100.0)
         self.plt.showGrid(x=True, y=True)
         self.plt.setLabel("left", "amplitude", "V")
         self.plt.setLabel("bottom", "time", "s")
