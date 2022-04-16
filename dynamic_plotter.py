@@ -18,16 +18,24 @@ class DynamicPlotter:
         # Data stuff
         self._interval = int(sampleinterval * 1000)
         self._bufsize = int(timewindow / sampleinterval)
-        self.databuffer = collections.deque(
+        self.databuffer_r = collections.deque(
+            [0.0] * self._bufsize, self._bufsize)
+        self.databuffer_g = collections.deque(
+            [0.0] * self._bufsize, self._bufsize)
+        self.databuffer_b = collections.deque(
             [0.0] * self._bufsize, self._bufsize)
         self.x = np.linspace(0.0, timewindow, self._bufsize)
-        self.y = np.zeros(self._bufsize, dtype=np.float)
+        self.y_r = np.zeros(self._bufsize, dtype=np.float)
+        self.y_g = np.zeros(self._bufsize, dtype=np.float)
+        self.y_b = np.zeros(self._bufsize, dtype=np.float)
         self.plt = pg.PlotWidget(widget)
         self.plt.setYRange(-100.0, 100.0)
         self.plt.showGrid(x=True, y=True)
         self.plt.setLabel("left", "amplitude", "V")
         self.plt.setLabel("bottom", "time", "s")
-        self.curve = self.plt.plot(self.x, self.y, pen=(255, 0, 0))
+        self.curve_r = self.plt.plot(self.x, self.y_r, pen="r")
+        self.curve_g = self.plt.plot(self.x, self.y_g, pen="g")
+        self.curve_b = self.plt.plot(self.x, self.y_b, pen="b")
 
         self.plot_func = "step"
         self.maxAmplitude = 0.0
@@ -35,7 +43,7 @@ class DynamicPlotter:
         self.period = 2*np.pi
         self.offset = 0.0
         self.queue = queue
-        self.last_value = 0.0
+        self.last_value = [0.0, 0.0, 0.0]
         # QTimer
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updateplot)
@@ -63,30 +71,40 @@ class DynamicPlotter:
         return getattr(self, self.plot_func)(time.time(), self.queue)
 
     def updateplot(self):
-        self.databuffer.append(self.get_data())
-        self.y[:] = self.databuffer
-        self.curve.setData(self.x, self.y)
+        data = self.get_data()
+
+        self.databuffer_b.append(data[0])
+        self.databuffer_r.append(data[-1])
+        self.databuffer_g.append(data[-2])
+
+        self.y_b[:] = self.databuffer_b
+        self.y_r[:] = self.databuffer_r
+        self.y_g[:] = self.databuffer_g
+
+        self.curve_b.setData(self.x, self.y_b)
+        self.curve_r.setData(self.x, self.y_r)
+        self.curve_g.setData(self.x, self.y_g)
 
     def step(self, t, queue):
-        return self.maxAmplitude
+        return [self.maxAmplitude, 0, 0]
 
     def sine(self, t, queue):
-        return self.maxAmplitude * np.sin(
+        return [self.maxAmplitude * np.sin(
             (2*np.pi/self.period)*t
-        ) + self.offset*np.ones_like(t)
+        ) + self.offset*np.ones_like(t), 0, 0]
 
     def square(self, t, queue):
-        return self.maxAmplitude * signal.square(
+        return [self.maxAmplitude * signal.square(
             (2*np.pi/self.period)*t
-        ) + self.offset
+        ) + self.offset, 0, 0]
 
     def sawtooth(self, t, queue):
-        return self.maxAmplitude * signal.sawtooth(
+        return [self.maxAmplitude * signal.sawtooth(
             (2*np.pi/self.period)*t
-        ) + self.offset
+        ) + self.offset, 0, 0]
 
     def random(self, t, queue):
-        return self.maxAmplitude
+        return [self.maxAmplitude, 0, 0]
 
     def input(self, t, queue):
         if not queue.empty():

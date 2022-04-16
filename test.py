@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import ctypes
 from dynamic_plotter import DynamicPlotter
 from main_window import Ui_MainWindow
 import sys  # We need sys so that we can pass argv to QApplication
@@ -24,7 +25,7 @@ async def echo(websocket):
             await websocket.send("get outputs")
             received = (await websocket.recv()).split(",")
             #print("Outputs: " + received[1])
-            queue.put(received[1])
+            queue.put(received)
             time.sleep(0.05)
         except Exception as e:
             print(e)
@@ -37,15 +38,6 @@ async def foo():
 
 
 def view():
-    '''while True:
-        try:
-            if not queue.empty():
-                print("oi")
-                view = queue.get()
-                print(view)
-        except Exception as e:
-            print(e)
-            return'''
 
     gui = QtWidgets.QApplication(sys.argv)
 
@@ -54,8 +46,8 @@ def view():
     window.show()
     gui.exec()
 
-import ctypes
-myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+
+myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 server = websockets.serve(echo, "localhost", 6660)

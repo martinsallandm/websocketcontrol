@@ -70,20 +70,3 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def closeEvent(self, event):
         os._exit(1)
-
-
-'''queue = Queue(maxsize=100)
-
-queue.put(1)
-queue.put(-1)
-queue.put(13)
-queue.put(2.1)
-queue.put(1.7)
-queue.put(0.1)
-
-app = QtWidgets.QApplication(sys.argv)
-
-window = MainWindow(queue)
-window.setWindowIcon(QtGui.QIcon("qtui/feedback.png"))
-window.show()
-app.exec()'''
