@@ -13,7 +13,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
-        self.dynamic_plotter = DynamicPlotter(self.centralWidget, queue, 0.01)
+        self.dynamic_plotter = DynamicPlotter(
+            self.centralWidget, queue, 0.01, timewindow=60)
 
         self.graphWidget = self.dynamic_plotter.get_plot_widget()
         self.graphWidget.setObjectName("graphWidget")
