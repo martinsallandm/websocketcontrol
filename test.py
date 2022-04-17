@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
+import webbrowser
 import ctypes
-from dynamic_plotter import DynamicPlotter
-from main_window import Ui_MainWindow
 import sys  # We need sys so that we can pass argv to QApplication
-from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6 import QtWidgets, QtGui
 import app
 import asyncio
 import threading
@@ -55,6 +54,10 @@ def view():
 
 myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+webbrowser.open(
+    'https://www.dev-mind.blog/control-systems-virtual-lab/', new=1
+)
 
 server = websockets.serve(echo, "localhost", 6660)
 asyncio.get_event_loop().run_until_complete(server)
