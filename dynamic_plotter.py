@@ -1,3 +1,5 @@
+import queue
+from click import style
 from pyqtgraph.Qt import QtCore
 import pyqtgraph as pg
 from scipy import signal
@@ -13,7 +15,7 @@ import numpy as np
 
 class DynamicPlotter:
     def __init__(
-            self, widget, queue, sampleinterval=0.05, timewindow=10.0,
+            self, widget, queue_out, queue_in, sampleinterval=0.05, timewindow=10.0,
             size=(600, 350)):
         # Data stuff
         self._interval = int(sampleinterval * 1000)
@@ -24,10 +26,13 @@ class DynamicPlotter:
             [0.0] * self._bufsize, self._bufsize)
         self.databuffer_b = collections.deque(
             [0.0] * self._bufsize, self._bufsize)
+        self.databuffer_p = collections.deque(
+            [0.0] * self._bufsize, self._bufsize)
         self.x = np.linspace(0.0, timewindow, self._bufsize)
         self.y_r = np.zeros(self._bufsize, dtype=np.float)
         self.y_g = np.zeros(self._bufsize, dtype=np.float)
         self.y_b = np.zeros(self._bufsize, dtype=np.float)
+        self.y_p = np.zeros(self._bufsize, dtype=np.float)
         self.plt = pg.PlotWidget(widget)
         self.plt.setYRange(-100.0, 100.0)
         self.plt.showGrid(x=True, y=True)
@@ -42,7 +47,8 @@ class DynamicPlotter:
         self.minAmplitude = 0.0
         self.period = 2*np.pi
         self.offset = 0.0
-        self.queue = queue
+        self.queue_out = queue_out
+        self.queue_in = queue_in
         self.last_value = [0.0, 0.0, 0.0]
         # QTimer
         self.timer = QtCore.QTimer()
@@ -68,7 +74,9 @@ class DynamicPlotter:
         return self.plt
 
     def get_data(self):
-        return getattr(self, self.plot_func)(time.time(), self.queue)
+        data = getattr(self, self.plot_func)(time.time(), self.queue_out)
+        self.queue_in.put(data[0])
+        return data
 
     def updateplot(self):
         data = self.get_data()
@@ -85,28 +93,28 @@ class DynamicPlotter:
         self.curve_r.setData(self.x, self.y_r)
         self.curve_g.setData(self.x, self.y_g)
 
-    def step(self, t, queue):
-        return [self.maxAmplitude, 0, 0]
-
-    def sine(self, t, queue):
-        return [self.maxAmplitude * np.sin(
-            (2*np.pi/self.period)*t
-        ) + self.offset*np.ones_like(t), 0, 0]
-
-    def square(self, t, queue):
-        return [self.maxAmplitude * signal.square(
-            (2*np.pi/self.period)*t
-        ) + self.offset, 0, 0]
-
-    def sawtooth(self, t, queue):
-        return [self.maxAmplitude * signal.sawtooth(
-            (2*np.pi/self.period)*t
-        ) + self.offset, 0, 0]
-
-    def random(self, t, queue):
-        return [self.maxAmplitude, 0, 0]
-
-    def input(self, t, queue):
-        if not queue.empty():
-            self.last_value = queue.get()
+    def simulator(self, queue_out):
+        if not queue_out.empty():
+            self.last_value = queue_out.get()
         return self.last_value
+
+    def step(self, t, queue_out):
+        return [self.maxAmplitude] + self.simulator(queue_out)
+
+    def sine(self, t, queue_out):
+        return [self.maxAmplitude * np.sin(
+                (2*np.pi/self.period)*t
+                ) + self.offset*np.ones_like(t)] + self.simulator(queue_out)
+
+    def square(self, t, queue_out):
+        return [self.maxAmplitude * signal.square(
+                (2*np.pi/self.period)*t
+                ) + self.offset] + self.simulator(queue_out)
+
+    def sawtooth(self, t, queue_out):
+        return [self.maxAmplitude * signal.sawtooth(
+                (2*np.pi/self.period)*t
+                ) + self.offset] + self.simulator(queue_out)
+
+    def random(self, t, queue_out):
+        return [self.maxAmplitude] + self.simulator(queue_out)

@@ -9,12 +9,12 @@ from queue import Queue
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self, queue, *args, obj=None, **kwargs):
+    def __init__(self, queue_out, queue_in, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
         self.dynamic_plotter = DynamicPlotter(
-            self.centralWidget, queue, 0.01, timewindow=60)
+            self.centralWidget, queue_out, queue_in, 0.01, timewindow=60)
 
         self.graphWidget = self.dynamic_plotter.get_plot_widget()
         self.graphWidget.setObjectName("graphWidget")

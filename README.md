@@ -70,8 +70,8 @@ $ pip install -r requeriments.txt
 ```console
 $ python3 test.py
 ```
-Selecione a curva *input*.
-
 Em seguida, abra o [simulador](https://dev-mind.blog/apps/control_systems/iDynamic/system6.html). Clique em *Control* e em *Play*.
+
+Selecione a forma de onda de entrada e altere a amplitude.
 
 ![print](images/graph.jpg)

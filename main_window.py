@@ -64,7 +64,7 @@ class Ui_MainWindow(object):
         self.comboBoxWaveForm.addItem("")
         self.comboBoxWaveForm.addItem("")
         self.comboBoxWaveForm.addItem("")
-        self.comboBoxWaveForm.addItem("")
+        # self.comboBoxWaveForm.addItem("")
         self.formLayout.addWidget(self.comboBoxWaveForm)
         self.horizontalLine_2 = QtWidgets.QFrame(self.centralWidget)
         self.horizontalLine_2.setFrameShape(QtWidgets.QFrame.Shape.HLine)
@@ -80,8 +80,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.labelMaxAmplitude)
         self.doubleBoxMaxAmplitude = QtWidgets.QDoubleSpinBox(
             self.centralWidget)
-        self.doubleBoxMaxAmplitude.setMinimum(0.0)
-        self.doubleBoxMaxAmplitude.setMaximum(1.0)
+        self.doubleBoxMaxAmplitude.setMinimum(-100.0)
+        self.doubleBoxMaxAmplitude.setMaximum(100.0)
         self.doubleBoxMaxAmplitude.setSingleStep(0.01)
         self.doubleBoxMaxAmplitude.setProperty("value", 0.0)
         self.doubleBoxMaxAmplitude.setObjectName("doubleBoxMaxAmplitude")
@@ -171,8 +171,8 @@ class Ui_MainWindow(object):
             3, _translate("MainWindow", "sawtooth"))
         self.comboBoxWaveForm.setItemText(
             4, _translate("MainWindow", "random"))
-        self.comboBoxWaveForm.setItemText(
-            5, _translate("MainWindow", "input"))
+        # self.comboBoxWaveForm.setItemText(
+        # 5, _translate("MainWindow", "input"))
         self.labelMaxAmplitude.setText(_translate("MainWindow", "Amplitude"))
         self.labelMinAmplitude.setText(
             _translate("MainWindow", "Min Amplitude"))

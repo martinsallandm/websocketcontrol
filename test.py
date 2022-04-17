@@ -13,35 +13,41 @@ import time
 
 from queue import Queue
 
-queue = Queue(maxsize=100)
+queue_out = Queue(maxsize=100)
+queue_in = Queue(maxsize=100)
 
 
 async def echo(websocket):
     while True:
         try:
+            startTime = time.time()
             await websocket.send("get references")
             received = (await websocket.recv()).split(",")
-            # print("Reference: " + received[1])
+            # queue_ref.put(received)
+            # print(received)
             await websocket.send("get outputs")
             received = (await websocket.recv()).split(",")
-            #print("Outputs: " + received[1])
-            queue.put(received)
-            time.sleep(0.05)
+            # print("Outputs: " + received[1])
+            queue_out.put(received)
+            while queue_in.empty():
+                time.sleep(0.0001)
+
+            await websocket.send("set input|"+str(queue_in.get()))
+            ellapsedTime = 0.0
+            while ellapsedTime < 0.01:
+                time.sleep(0.0001)
+                endTime = time.time()
+                ellapsedTime = endTime - startTime
         except Exception as e:
             print(e)
             return
-
-
-async def foo():
-    async with websockets.serve(echo, "localhost", 6660):
-        await asyncio.Future()
 
 
 def view():
 
     gui = QtWidgets.QApplication(sys.argv)
 
-    window = app.MainWindow(queue)
+    window = app.MainWindow(queue_out, queue_in)
     window.setWindowIcon(QtGui.QIcon("qtui/feedback.png"))
     window.show()
     gui.exec()
