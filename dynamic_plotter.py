@@ -1,9 +1,6 @@
-import queue
-from click import style
 from pyqtgraph.Qt import QtCore
 import pyqtgraph as pg
 from scipy import signal
-from queue import Queue
 
 import collections
 import time
@@ -15,8 +12,8 @@ import numpy as np
 
 class DynamicPlotter:
     def __init__(
-            self, widget, queue_out, queue_in, sampleinterval=0.05, timewindow=10.0,
-            size=(600, 350)):
+            self, widget, queue_out, queue_in, sampleinterval=0.05,
+            timewindow=10.0, size=(600, 350)):
         # Data stuff
         self._interval = int(sampleinterval * 1000)
         self._bufsize = int(timewindow / sampleinterval)
