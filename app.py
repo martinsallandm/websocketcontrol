@@ -1,11 +1,8 @@
-from PyQt6 import QtWidgets, QtGui
-import sys  # We need sys so that we can pass argv to QApplication
 import os
 
+from PyQt6 import QtWidgets
 from main_window import Ui_MainWindow
-
 from dynamic_plotter import DynamicPlotter
-from queue import Queue
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
