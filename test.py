@@ -14,6 +14,7 @@ from queue import Queue
 
 queue_out = Queue(maxsize=100)
 queue_in = Queue(maxsize=100)
+queue_ref = Queue(maxsize=100)
 
 
 async def echo(websocket):
@@ -22,7 +23,7 @@ async def echo(websocket):
             startTime = time.time()
             await websocket.send("get references")
             received = (await websocket.recv()).split(",")
-            # queue_ref.put(received)
+            queue_ref.put(received)
             # print(received)
             await websocket.send("get outputs")
             received = (await websocket.recv()).split(",")
@@ -46,7 +47,7 @@ def view():
 
     gui = QtWidgets.QApplication(sys.argv)
 
-    window = app.MainWindow(queue_out, queue_in)
+    window = app.MainWindow(queue_out, queue_in, queue_ref)
     window.setWindowIcon(QtGui.QIcon("qtui/feedback.png"))
     window.show()
     gui.exec()

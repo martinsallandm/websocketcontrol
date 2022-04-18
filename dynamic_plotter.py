@@ -1,3 +1,4 @@
+import queue
 from pyqtgraph.Qt import QtCore
 import pyqtgraph as pg
 from scipy import signal
@@ -12,7 +13,7 @@ import numpy as np
 
 class DynamicPlotter:
     def __init__(
-            self, widget, queue_out, queue_in, sampleinterval=0.05,
+            self, widget, queue_out, queue_in, queue_ref, sampleinterval=0.05,
             timewindow=10.0, size=(600, 350)):
         # Data stuff
         self._interval = int(sampleinterval * 1000)
@@ -38,6 +39,7 @@ class DynamicPlotter:
         self.curve_r = self.plt.plot(self.x, self.y_r, pen="r")
         self.curve_g = self.plt.plot(self.x, self.y_g, pen="g")
         self.curve_b = self.plt.plot(self.x, self.y_b, pen="b")
+        self.curve_p = self.plt.plot(self.x, self.y_b, pen="c")
 
         self.plot_func = "step"
         self.maxAmplitude = 0.0
@@ -46,6 +48,7 @@ class DynamicPlotter:
         self.offset = 0.0
         self.queue_out = queue_out
         self.queue_in = queue_in
+        self.queue_ref = queue_ref
         self.last_value = [0.0, 0.0, 0.0]
         # QTimer
         self.timer = QtCore.QTimer()
@@ -73,22 +76,26 @@ class DynamicPlotter:
     def get_data(self):
         data = getattr(self, self.plot_func)(time.time(), self.queue_out)
         self.queue_in.put(data[0])
-        return data
+        ref = self.queue_ref.get()
+        return data, ref
 
     def updateplot(self):
-        data = self.get_data()
+        data, ref = self.get_data()
 
         self.databuffer_b.append(data[0])
         self.databuffer_r.append(data[-1])
         self.databuffer_g.append(data[-2])
+        self.databuffer_p.append(ref[1])
 
         self.y_b[:] = self.databuffer_b
         self.y_r[:] = self.databuffer_r
         self.y_g[:] = self.databuffer_g
+        self.y_p[:] = self.databuffer_p
 
         self.curve_b.setData(self.x, self.y_b)
         self.curve_r.setData(self.x, self.y_r)
         self.curve_g.setData(self.x, self.y_g)
+        self.curve_p.setData(self.x, self.y_p)
 
     def simulator(self, queue_out):
         if not queue_out.empty():
