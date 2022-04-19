@@ -75,3 +75,23 @@ Em seguida, abra o [simulador](https://dev-mind.blog/apps/control_systems/iDynam
 Selecione a forma de onda de entrada e altere a amplitude.
 
 ![print](images/graph.jpg)
+
+# Resultados
+
+## Loop Aberto
+
+### Seno
+
+![sine_open](images/sine_open.jpg)
+
+### Onda Quadrada
+
+![square_open](images/square_open.jpg)
+
+### Dente de Serra
+
+![sawtooth_open](images/sawtooth_open.jpg)
+
+### Step
+
+![step_open](images/step_open.jpg)

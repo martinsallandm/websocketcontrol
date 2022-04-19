@@ -15,6 +15,8 @@ from queue import Queue
 queue_out = Queue(maxsize=100)
 queue_in = Queue(maxsize=100)
 queue_ref = Queue(maxsize=100)
+queue_ref_in = Queue(maxsize=100)
+loop = False
 
 
 async def echo(websocket):
@@ -56,9 +58,9 @@ def view():
 myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-webbrowser.open(
+"""webbrowser.open(
     'https://www.dev-mind.blog/control-systems-virtual-lab/', new=1
-)
+)"""
 
 server = websockets.serve(echo, "localhost", 6660)
 asyncio.get_event_loop().run_until_complete(server)
