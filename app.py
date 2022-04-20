@@ -6,12 +6,14 @@ from dynamic_plotter import DynamicPlotter
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self, queue_out, queue_in, queue_ref, *args, obj=None, **kwargs):
+    def __init__(
+            self, queue_out, queue_in, queue_ref, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
         self.dynamic_plotter = DynamicPlotter(
-            self.centralWidget, queue_out, queue_in, queue_ref, 0.01, timewindow=10)
+            self.centralWidget, queue_out, queue_in,
+            queue_ref, 0.01, timewindow=10)
 
         self.graphWidget = self.dynamic_plotter.get_plot_widget()
         self.graphWidget.setObjectName("graphWidget")
@@ -31,8 +33,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.doubleBoxMinAmplitude.valueChanged.connect(
             self.change_min_amplitude
         )
-        self.doubleBoxPeriod.valueChanged.connect(
-            self.change_period
+        self.doubleBoxMaxPeriod.valueChanged.connect(
+            self.change_max_period
+        )
+        self.doubleBoxMinPeriod.valueChanged.connect(
+            self.change_min_period
         )
         self.doubleBoxOffset.valueChanged.connect(
             self.change_offset
@@ -49,9 +54,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if wave_form == "random":
             self.labelMaxAmplitude.setText("Max Amplitude")
             self.doubleBoxMinAmplitude.setEnabled(True)
+            self.labelMaxPeriod.setText("Max Period")
+            self.doubleBoxMinPeriod.setEnabled(True)
         else:
             self.labelMaxAmplitude.setText("Amplitude")
             self.doubleBoxMinAmplitude.setEnabled(False)
+            self.labelMaxPeriod.setText("Period")
+            self.doubleBoxMinPeriod.setEnabled(False)
         self.dynamic_plotter.set_plot_func(wave_form)
 
     def change_max_amplitude(self, value):
@@ -60,8 +69,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def change_min_amplitude(self, value):
         self.dynamic_plotter.set_minAmplitude(value)
 
-    def change_period(self, value):
-        self.dynamic_plotter.set_period(value)
+    def change_max_period(self, value):
+        self.dynamic_plotter.set_maxPeriod(value)
+
+    def change_min_period(self, value):
+        self.dynamic_plotter.set_minPeriod(value)
 
     def change_offset(self, value):
         self.dynamic_plotter.set_offset(value)
