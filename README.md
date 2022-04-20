@@ -1,6 +1,6 @@
-# Projeto de controle de sistemas
+# Projeto de Sistemas de Controle
 
-Hugo Tallys e João Arthur
+Hugo Tallys Martins Oliveira e João Arthur Gaia da Rocha Almeida
 
 # Introdução
 
@@ -17,15 +17,14 @@ simuladores é uma excelente alternativa para fins acadêmicos e de projeto.
 
 O simulador [iDynamic](https://www.dev-mind.blog/control-systems-virtual-lab/)
 desenvolvido pela UFRN é bastante completo. Contando com simulação gráfica,
-interativa, 2D, 3D e com vários exemplos de sistemas diferentes. Pecando
-apenas na documentação rasa.
+interativa, 2D, 3D e com vários exemplos de sistemas diferentes.
 
-Contudo, sua principal funcionalidade é a possibilidade do usuário inserir o 
+Sua principal funcionalidade é a possibilidade do usuário inserir o 
 próprio controlador no sistema.
 
 # Objetivo
 
-Esse projeto se trata de uma aplicação em que é possível trocar dados com o
+Esse projeto tem por objetivo desenvolver uma aplicação em que seja possível trocar dados com o
 iDynamic, com a possibilidade de se inserir várias curvas de entrada e plotar
 as saídas do simulador. Concentrando-se no exemplo de massa-mola complexo.
 
@@ -47,8 +46,7 @@ websockets a arquitetura do projeto.
 # Arquitetura
 
 O projeto é estruturado com [threading](https://docs.python.org/3/library/threading.html). Uma thread faz a comunicação com o iDynamic e outra controla
-a interface gráfica. Essa escolha foi tomada devido ao delay que seria demasiado
-no caso de um processamento single thread.
+a interface gráfica. Essa escolha foi tomada devido ao delay que seria demasiado no caso de um processamento single thread.
 
 Como o websockets é baseado em [asyncio](https://docs.python.org/3/library/asyncio.html) que é uma biblioteca pensada em processos concorrentes em single thread, sua implementação com múltiplas threads foi um tanto custosa.
 
@@ -62,9 +60,8 @@ Mais detalhes da arquitetura na imagem a seguir:
 
 # Interface gráfica
 
-A interface gráfica foi desenvolvia com [PyQt6](https://wiki.python.org/moin/PyQt), baseando-se no [tutorial](https://www.pythonguis.com/pyqt6-tutorial/).
-Já os gráficos foram desenvolvidos com [PyQtGraph](https://www.pyqtgraph.org/),
-baseando-se no [passo-a-passo](https://www.pythonguis.com/tutorials/plotting-pyqtgraph/).
+A interface gráfica foi desenvolvia com [PyQt6](https://wiki.python.org/moin/PyQt), utilizando-se como guia [tutorial](https://www.pythonguis.com/pyqt6-tutorial/). A IDE [QT Creator](https://www.qt.io/product/development-tools)
+foi utilizada para fácil desenvolvimento e prototipação da interface de usuário. Os gráficos foram desenvolvidos com [PyQtGraph](https://www.pyqtgraph.org/), baseando-se no exemplo encontrado em [python-live-plotting](https://github.com/ap--/python-live-plotting/blob/master/plot_pyqtgraph.py).
 
 # Setup inicial
 
@@ -85,6 +82,11 @@ Selecione a forma de onda de entrada e altere a amplitude.
 ![print](images/graph.jpg)
 
 # Resultados
+
+Nas imagens a seguir podemos ver as curvas obtidas através da leitura dos dados dos simulador. Também é possível escrever dados no simulador, como pode ser observado na curva azul (senóide)
+onde para cada tipo de curva de entrada é fornicido um conjunto de parametros editáveis.
+
+![idynamic](images/idynamic.png)
 
 ## Loop Aberto
 
