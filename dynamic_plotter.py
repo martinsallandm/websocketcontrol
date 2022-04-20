@@ -1,4 +1,3 @@
-import queue
 from pyqtgraph.Qt import QtCore
 import pyqtgraph as pg
 from scipy import signal
@@ -44,7 +43,8 @@ class DynamicPlotter:
         self.plot_func = "step"
         self.maxAmplitude = 0.0
         self.minAmplitude = 0.0
-        self.period = 2*np.pi
+        self.maxPeriod = 2*np.pi
+        self.minPeriod = 0.1
         self.offset = 0.0
         self.queue_out = queue_out
         self.queue_in = queue_in
@@ -64,8 +64,11 @@ class DynamicPlotter:
     def set_minAmplitude(self, value):
         self.minAmplitude = value
 
-    def set_period(self, value):
-        self.period = value
+    def set_maxPeriod(self, value):
+        self.maxPeriod = value
+
+    def set_minPeriod(self, value):
+        self.minPeriod = value
 
     def set_offset(self, value):
         self.offset = value
@@ -107,17 +110,17 @@ class DynamicPlotter:
 
     def sine(self, t, queue_out):
         return [self.maxAmplitude * np.sin(
-                (2*np.pi/self.period)*t
+                (2*np.pi/self.maxPeriod)*t
                 ) + self.offset*np.ones_like(t)] + self.simulator(queue_out)
 
     def square(self, t, queue_out):
         return [self.maxAmplitude * signal.square(
-                (2*np.pi/self.period)*t
+                (2*np.pi/self.maxPeriod)*t
                 ) + self.offset] + self.simulator(queue_out)
 
     def sawtooth(self, t, queue_out):
         return [self.maxAmplitude * signal.sawtooth(
-                (2*np.pi/self.period)*t
+                (2*np.pi/self.maxPeriod)*t
                 ) + self.offset] + self.simulator(queue_out)
 
     def random(self, t, queue_out):
