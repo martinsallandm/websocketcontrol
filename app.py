@@ -7,13 +7,13 @@ from dynamic_plotter import DynamicPlotter
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(
-            self, queue_out, queue_in, queue_ref, *args, obj=None, **kwargs):
+            self, queue_out, queue_in, queue_ref, queue_ref_in, loop, *args, obj=None, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
         self.dynamic_plotter = DynamicPlotter(
             self.centralWidget, queue_out, queue_in,
-            queue_ref, 0.01, timewindow=10)
+            queue_ref, queue_ref_in, loop, 0.01, timewindow=10)
 
         self.graphWidget = self.dynamic_plotter.get_plot_widget()
         self.graphWidget.setObjectName("graphWidget")

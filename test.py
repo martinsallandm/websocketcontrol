@@ -34,6 +34,12 @@ async def echo(websocket):
                 time.sleep(0.0001)
 
             await websocket.send("set input|"+str(queue_in.get()))
+            # Aqui mestre hugo
+            '''if loop:
+                while queue_ref_in.empty():
+                    time.sleep(0.0001)
+
+                await websocket.send("set references|"+str(queue_ref_in.get()))'''
             ellapsedTime = 0.0
             while ellapsedTime < 0.01:
                 time.sleep(0.0001)
@@ -48,7 +54,7 @@ def view():
 
     gui = QtWidgets.QApplication(sys.argv)
 
-    window = app.MainWindow(queue_out, queue_in, queue_ref)
+    window = app.MainWindow(queue_out, queue_in, queue_ref, queue_ref_in, loop)
     window.setWindowIcon(QtGui.QIcon("qtui/feedback.png"))
     window.show()
     gui.exec()
