@@ -50,7 +50,11 @@ Como o websockets é baseado em [asyncio](https://docs.python.org/3/library/asyn
 
 Por fim, a comunicação com o iDynamic foi feita com websockets, rodando na thread
 principal. Uma thread secundária roda a interface gráfica. A comunicação entre 
-as duas threads é feita através de uma [queue](https://docs.python.org/3/library/queue.html).
+as duas threads é feita através de [queues](https://docs.python.org/3/library/queue.html).
+
+Mais detalhes da arquitetura na imagem a seguir:
+
+![architeture](./images/architeture.jpg)
 
 # Interface gráfica
 
