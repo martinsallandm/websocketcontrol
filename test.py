@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import webbrowser
 import ctypes
 import sys  # We need sys so that we can pass argv to QApplication
 from PyQt6 import QtWidgets, QtGui
@@ -57,10 +56,6 @@ def view():
 
 myappid = 'mycompany.myproduct.subproduct.version'  # arbitrary string
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-
-"""webbrowser.open(
-    'https://www.dev-mind.blog/control-systems-virtual-lab/', new=1
-)"""
 
 server = websockets.serve(echo, "localhost", 6660)
 asyncio.get_event_loop().run_until_complete(server)
