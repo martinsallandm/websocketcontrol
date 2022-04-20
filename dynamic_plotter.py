@@ -52,6 +52,9 @@ class DynamicPlotter:
         self.queue_ref_in = queue_ref_in
         self.loop = loop
         self.last_value = [0.0, 0.0, 0.0]
+        self.rand_data = np.random.uniform(
+            self.minPeriod, self.maxPeriod, (1, 10000))
+        self.count = 0
         # QTimer
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updateplot)
@@ -68,9 +71,13 @@ class DynamicPlotter:
 
     def set_maxPeriod(self, value):
         self.maxPeriod = value
+        self.rand_data = np.random.uniform(
+            self.minPeriod, self.maxPeriod, (1, 10000))
 
     def set_minPeriod(self, value):
         self.minPeriod = value
+        self.rand_data = np.random.uniform(
+            self.minPeriod, self.maxPeriod, (1, 10000))
 
     def set_offset(self, value):
         self.offset = value
@@ -121,18 +128,22 @@ class DynamicPlotter:
 
     def sine(self, t, queue_out):
         return [self.maxAmplitude * np.sin(
-                (2*np.pi/self.maxPeriod)*t
-                ) + self.offset*np.ones_like(t)] + self.simulator(queue_out)
+            (2*np.pi/self.maxPeriod)*t
+        ) + self.offset*np.ones_like(t)] + self.simulator(queue_out)
 
     def square(self, t, queue_out):
         return [self.maxAmplitude * signal.square(
-                (2*np.pi/self.maxPeriod)*t
-                ) + self.offset] + self.simulator(queue_out)
+            (2*np.pi/self.maxPeriod)*t
+        ) + self.offset] + self.simulator(queue_out)
 
     def sawtooth(self, t, queue_out):
         return [self.maxAmplitude * signal.sawtooth(
-                (2*np.pi/self.maxPeriod)*t
-                ) + self.offset] + self.simulator(queue_out)
+            (2*np.pi/self.maxPeriod)*t
+        ) + self.offset] + self.simulator(queue_out)
 
     def random(self, t, queue_out):
-        return [self.maxAmplitude] + self.simulator(queue_out)
+        rand = self.maxAmplitude*self.rand_data[0][self.count]+self.offset
+        self.count += 1
+        if self.count >= 100*int(self.maxPeriod):
+            self.count = 0
+        return [rand] + self.simulator(queue_out)

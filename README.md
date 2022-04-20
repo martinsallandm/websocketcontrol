@@ -1,3 +1,7 @@
+# Projeto de controle de sistemas
+
+Hugo Tallys e João Arthur
+
 # Introdução
 
 Segundo [Nise, 2017](https://www.amazon.com.br/Engenharia-Sistemas-Controle-Norman-Nise/dp/8521634358/ref=sr_1_1?qid=1650079914&refinements=p_27%3ANorman+S.+Nise&s=books&sr=1-1&ufe=app_do%3Aamzn1.fos.db68964d-7c0e-4bb2-a95c-e5cb9e32eb12),
@@ -99,3 +103,7 @@ Selecione a forma de onda de entrada e altere a amplitude.
 ### Step
 
 ![step_open](images/step_open.jpg)
+
+### Sinal Pseudo Aleatório
+
+![rand_open](images/rand_open.jpg)
