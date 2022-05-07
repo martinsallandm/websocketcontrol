@@ -6,13 +6,11 @@ import collections
 import time
 import numpy as np
 
-# Original script at
-# https://github.com/ap--/python-live-plotting/blob/master/plot_pyqtgraph.py
-
 
 class DynamicPlotter:
     def __init__(
-            self, widget, queue_out, queue_in, queue_ref, queue_ref_in, loop, sampleinterval=0.05,
+            self, widget, queue_out, queue_in,
+            queue_ref, queue_ref_in, loop, sampleinterval=0.05,
             timewindow=10.0, size=(600, 350)):
         # Data stuff
         self._interval = int(sampleinterval * 1000)
@@ -55,7 +53,8 @@ class DynamicPlotter:
         self.rand_data = np.random.uniform(
             self.minPeriod, self.maxPeriod, (1, 10000))
         self.count = 0
-        # QTimer
+
+    def trigger_timer(self):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updateplot)
         self.timer.start(self._interval)
@@ -93,15 +92,6 @@ class DynamicPlotter:
 
     def updateplot(self):
         data, ref = self.get_data()
-
-        # Aqui mestre Hugo
-        """
-			# tem que dar um jeito de alterar loop quando marcar na gui que é malha fechada ou aberta, como é global, altera em todo canto, espero
-			if self.loop:
-				ref = self.ref_wave() #recebe os dados da função que altera a onda da referencia
-				self.queue_ref_in.put(ref)
-				ref = [1, ref] #isso é pra não crashar o databuffer no plot
-		"""
 
         self.databuffer_b.append(data[0])
         self.databuffer_r.append(data[-1])
