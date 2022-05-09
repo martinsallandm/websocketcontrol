@@ -82,9 +82,6 @@ class DynamicPlotter:
         return getattr(self, self.plot_func)(t)
 
     def update_plot(self, refs, outs, t):
-
-        print("up!")
-
         input = self.get_input(t)
 
         refs = [float(r) for r in refs]
