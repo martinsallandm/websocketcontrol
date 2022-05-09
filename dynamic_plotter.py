@@ -1,4 +1,3 @@
-from pyqtgraph.Qt import QtCore
 import pyqtgraph as pg
 from scipy import signal
 
@@ -9,8 +8,7 @@ import numpy as np
 
 class DynamicPlotter:
     def __init__(
-            self, widget, queue_out, queue_in,
-            queue_ref, queue_ref_in, loop, sampleinterval=0.05,
+            self, widget, sampleinterval=0.01,
             timewindow=10.0, size=(600, 350)):
         # Data stuff
         self._interval = int(sampleinterval * 1000)
@@ -44,20 +42,12 @@ class DynamicPlotter:
         self.maxPeriod = 2*np.pi
         self.minPeriod = 0.1
         self.offset = 0.0
-        self.queue_out = queue_out
-        self.queue_in = queue_in
-        self.queue_ref = queue_ref
-        self.queue_ref_in = queue_ref_in
-        self.loop = loop
         self.last_value = [0.0, 0.0, 0.0]
         self.rand_data = np.random.uniform(
             self.minPeriod, self.maxPeriod, (1, 10000))
         self.count = 0
 
-    def trigger_timer(self):
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.updateplot)
-        self.timer.start(self._interval)
+        self.signalComm.request_graph_update.connect(self.update_plot)
 
     def set_plot_func(self, value):
         self.plot_func = value
@@ -90,13 +80,22 @@ class DynamicPlotter:
         ref = self.queue_ref.get()
         return data, ref
 
-    def updateplot(self):
-        data, ref = self.get_data()
+    def get_input(self, t):
+        return getattr(self, self.plot_func)(t)
 
-        self.databuffer_b.append(data[0])
-        self.databuffer_r.append(data[-1])
-        self.databuffer_g.append(data[-2])
-        self.databuffer_p.append(ref[1])
+    def update_plot(self, refs, outs, t):
+
+        print("up!")
+
+        input = self.get_input(t)
+
+        refs = [float(r) for r in refs]
+        outs = [float(o) for o in outs]
+
+        self.databuffer_b.append(input[0])
+        self.databuffer_r.append(outs[0])
+        self.databuffer_g.append(outs[1])
+        self.databuffer_p.append(refs[0])
 
         self.y_b[:] = self.databuffer_b
         self.y_r[:] = self.databuffer_r
@@ -108,32 +107,30 @@ class DynamicPlotter:
         self.curve_g.setData(self.x, self.y_g)
         self.curve_p.setData(self.x, self.y_p)
 
-    def simulator(self, queue_out):
-        if not queue_out.empty():
-            self.last_value = queue_out.get()
-        return self.last_value
+        return input[0]
 
-    def step(self, t, queue_out):
-        return [self.maxAmplitude] + self.simulator(queue_out)
+    def step(self, t):
+        return [self.maxAmplitude]
 
-    def sine(self, t, queue_out):
+    def sine(self, t):
         return [self.maxAmplitude * np.sin(
             (2*np.pi/self.maxPeriod)*t
-        ) + self.offset*np.ones_like(t)] + self.simulator(queue_out)
+        ) + self.offset*np.ones_like(t)]
 
-    def square(self, t, queue_out):
+    def square(self, t):
         return [self.maxAmplitude * signal.square(
             (2*np.pi/self.maxPeriod)*t
-        ) + self.offset] + self.simulator(queue_out)
+        ) + self.offset]
 
-    def sawtooth(self, t, queue_out):
+    def sawtooth(self, t):
         return [self.maxAmplitude * signal.sawtooth(
             (2*np.pi/self.maxPeriod)*t
-        ) + self.offset] + self.simulator(queue_out)
+        ) + self.offset]
 
-    def random(self, t, queue_out):
+    def random(self, t):
+        return self.step(t)
         rand = self.maxAmplitude*self.rand_data[0][self.count]+self.offset
         self.count += 1
         if self.count >= 100*int(self.maxPeriod):
             self.count = 0
-        return [rand] + self.simulator(queue_out)
+        return [rand]

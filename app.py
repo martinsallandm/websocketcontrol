@@ -10,48 +10,46 @@ import asyncio
 import websockets
 import time
 
-from queue import Queue
-
-queue_out = Queue(maxsize=100)
-queue_in = Queue(maxsize=100)
-queue_ref = Queue(maxsize=100)
-queue_ref_in = Queue(maxsize=100)
-loop = False
+from websockets.exceptions import ConnectionClosedError
 
 
 class ThreadedServer(QRunnable):
+
+    def __init__(self, sampling_time, plotter):
+        super().__init__()
+        self.sampling_time = sampling_time
+        self.plotter = plotter
 
     async def server_loop(self, websocket):
         while True:
             try:
                 startTime = time.time()
+
                 await websocket.send("get references")
-                received = (await websocket.recv()).split(",")
-                queue_ref.put(received)
-                # print(received)
+                received = await websocket.recv()
+                n_refs, refs = self.parse_message(received)
+
                 await websocket.send("get outputs")
-                received = (await websocket.recv()).split(",")
-                # print("Outputs: " + received[1])
-                queue_out.put(received)
-                while queue_in.empty():
-                    time.sleep(0.0001)
+                received = await websocket.recv()
+                n_outs, outs = self.parse_message(received)
+                input = self.plotter.update_plot(refs, outs, time.time())
 
-                await websocket.send("set input|"+str(queue_in.get()))
-                # Aqui mestre hugo
-                '''if loop:
-                    while queue_ref_in.empty():
-                        time.sleep(0.0001)
+                if input is not None:
+                    await websocket.send("set input|"+str(input))
 
-                    await websocket.send(
-                        "set references|"+str(queue_ref_in.get()))'''
                 ellapsedTime = 0.0
-                while ellapsedTime < 0.01:
+                while ellapsedTime < self.sampling_time:
                     time.sleep(0.0001)
                     endTime = time.time()
                     ellapsedTime = endTime - startTime
-            except Exception as e:
-                print(e)
-                return
+            except ConnectionClosedError:
+                print("iDynamic connection was closed!")
+                break
+
+    @staticmethod
+    def parse_message(msg):
+        msg = msg.split(",")
+        return msg[0], msg[1:]
 
     @pyqtSlot()
     def run(self):
@@ -67,23 +65,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
 
-        self.server = ThreadedServer()
+        self.dynamic_plotter = DynamicPlotter(
+            self.centralWidget, 0.01, timewindow=10)
+
         self.threadpool = QThreadPool()
+
+        self.server = ThreadedServer(0.01, self.dynamic_plotter)
 
         print(
             "Multithreading with maximum %d threads"
             % self.threadpool.maxThreadCount()
         )
 
-        self.dynamic_plotter = DynamicPlotter(
-            self.centralWidget, queue_out, queue_in,
-            queue_ref, queue_ref_in, loop, 0.01, timewindow=10)
-
         self.graphWidget = self.dynamic_plotter.get_plot_widget()
         self.graphWidget.setObjectName("graphWidget")
         self.graphWidgetLayout.addWidget(self.graphWidget)
 
-        self.pushButtonConnectServer.pressed.connect(
+        self.pushButtonConnectServer.clicked.connect(
             self.init_server
         )
 
@@ -112,9 +110,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         )
 
     def init_server(self):
+        self.pushButtonConnectServer.setEnabled(False)
         print("started server")
         self.threadpool.start(self.server)
-        # self.dynamic_plotter.trigger_timer()
 
     def change_loop(self, i):
         if self.comboBoxLoop.itemText(i) == "Closed":
