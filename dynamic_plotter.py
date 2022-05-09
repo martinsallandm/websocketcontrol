@@ -47,8 +47,6 @@ class DynamicPlotter:
             self.minPeriod, self.maxPeriod, (1, 10000))
         self.count = 0
 
-        self.signalComm.request_graph_update.connect(self.update_plot)
-
     def set_plot_func(self, value):
         self.plot_func = value
 
