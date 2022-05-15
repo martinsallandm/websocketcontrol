@@ -37,6 +37,7 @@ class DynamicPlotter:
         self.curve_p = self.plt.plot(self.x, self.y_b, pen="c")
 
         self.plot_func = "step"
+        self.ref_plot_func = "step"
         self.maxAmplitude = 0.0
         self.minAmplitude = 0.0
         self.maxPeriod = 2*np.pi
@@ -46,9 +47,13 @@ class DynamicPlotter:
         self.rand_data = np.random.uniform(
             self.minPeriod, self.maxPeriod, (1, 10000))
         self.count = 0
+        self.loop = 0.0
 
     def set_plot_func(self, value):
         self.plot_func = value
+
+    def set_ref_plot_func(self, value):
+        self.ref_plot_func = value
 
     def set_maxAmplitude(self, value):
         self.maxAmplitude = value
@@ -72,22 +77,22 @@ class DynamicPlotter:
     def get_plot_widget(self):
         return self.plt
 
-    def get_data(self):
-        data = getattr(self, self.plot_func)(time.time(), self.queue_out)
-        self.queue_in.put(data[0])
-        ref = self.queue_ref.get()
-        return data, ref
-
     def get_input(self, t):
         return getattr(self, self.plot_func)(t)
 
+    def get_ref(self, t):
+        return getattr(self, self.ref_plot_func)(t)
+
     def update_plot(self, refs, outs, t):
         input = self.get_input(t)
-
+        ref = self.get_ref(t)
         refs = [float(r) for r in refs]
         outs = [float(o) for o in outs]
-
-        self.databuffer_b.append(input[0])
+        if self.loop == 1.0:
+            input = refs[0]-outs[1]
+        else:
+            input = input[0]
+        self.databuffer_b.append(input)
         self.databuffer_r.append(outs[0])
         self.databuffer_g.append(outs[1])
         self.databuffer_p.append(refs[0])
@@ -102,7 +107,7 @@ class DynamicPlotter:
         self.curve_g.setData(self.x, self.y_g)
         self.curve_p.setData(self.x, self.y_p)
 
-        return input[0]
+        return input, ref
 
     def step(self, t):
         return [self.maxAmplitude]

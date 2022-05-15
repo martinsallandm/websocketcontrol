@@ -32,10 +32,12 @@ class ThreadedServer(QRunnable):
                 await websocket.send("get outputs")
                 received = await websocket.recv()
                 n_outs, outs = self.parse_message(received)
-                input = self.plotter.update_plot(refs, outs, time.time())
+                input, ref = self.plotter.update_plot(refs, outs, time.time())
 
                 if input is not None:
                     await websocket.send("set input|"+str(input))
+                '''if ref is not None:
+                    await websocket.send("set references|"+str(ref))'''
 
                 ellapsedTime = 0.0
                 while ellapsedTime < self.sampling_time:
@@ -97,7 +99,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBoxWaveForm.currentIndexChanged.connect(
             self.change_wave_form
         )
-
+        self.comboBoxReferenceWaveForm.currentIndexChanged.connect(
+            self.change_ref_wave_form
+        )
         self.doubleBoxMaxAmplitude.valueChanged.connect(
             self.change_max_amplitude
         )
@@ -120,12 +124,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.threadpool.start(self.server)
 
     def refresh_graph(self):
-        pass
+        self.server.plotter = DynamicPlotter(
+            self.centralWidget, 0.01, timewindow=10)
 
     def change_loop(self, i):
         if self.comboBoxLoop.itemText(i) == "Closed":
+            self.server.plotter.loop = 1.0
             self.doubleBoxSetPoint.setEnabled(True)
         else:
+            self.server.plotter.loop = 0.0
             self.doubleBoxSetPoint.setEnabled(False)
 
     def change_wave_form(self, i):
@@ -141,6 +148,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.labelMaxPeriod.setText("Period")
             self.doubleBoxMinPeriod.setEnabled(False)
         self.dynamic_plotter.set_plot_func(wave_form)
+
+    def change_ref_wave_form(self, i):
+        wave_form = self.comboBoxWaveForm.itemText(i)
+        self.dynamic_plotter.set_ref_plot_func(wave_form)
 
     def change_max_amplitude(self, value):
         self.dynamic_plotter.set_maxAmplitude(value)
