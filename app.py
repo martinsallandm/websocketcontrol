@@ -88,10 +88,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.init_server
         )
 
-        self.pushButtonRefreshGraphics.clicked.connect(
-            self.refresh_graph
-        )
-
         self.comboBoxLoop.currentIndexChanged.connect(
             self.change_loop
         )
@@ -122,10 +118,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButtonConnectServer.setEnabled(False)
         print("started server")
         self.threadpool.start(self.server)
-
-    def refresh_graph(self):
-        self.server.plotter = DynamicPlotter(
-            self.centralWidget, 0.01, timewindow=10)
 
     def change_loop(self, i):
         if self.comboBoxLoop.itemText(i) == "Closed":
