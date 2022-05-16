@@ -36,8 +36,8 @@ class ThreadedServer(QRunnable):
 
                 if input is not None:
                     await websocket.send("set input|"+str(input))
-                '''if ref is not None:
-                    await websocket.send("set references|"+str(ref))'''
+                if ref is not None:
+                    await websocket.send("set references|"+str(ref[0]))
 
                 ellapsedTime = 0.0
                 while ellapsedTime < self.sampling_time:
