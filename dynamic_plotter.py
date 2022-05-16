@@ -44,10 +44,10 @@ class DynamicPlotter:
         self.minPeriod = 0.1
         self.offset = 0.0
         self.last_value = [0.0, 0.0, 0.0]
-        self.rand_data = np.random.uniform(
-            self.minPeriod, self.maxPeriod, (1, 10000))
         self.count = 0
         self.loop = 0.0
+        self.start = 0.0
+        self.rand = 0.0
 
     def set_plot_func(self, value):
         self.plot_func = value
@@ -128,9 +128,11 @@ class DynamicPlotter:
         ) + self.offset]
 
     def random(self, t):
-        return self.step(t)
-        rand = self.maxAmplitude*self.rand_data[0][self.count]+self.offset
-        self.count += 1
-        if self.count >= 100*int(self.maxPeriod):
-            self.count = 0
-        return [rand]
+        if t-self.start >= self.maxPeriod:
+            self.rand = np.random.uniform(self.minAmplitude, self.maxAmplitude)
+            self.start = t
+        elif t-self.start >= self.minPeriod:
+            if np.random.randint(0,1) == 1:
+                self.rand = np.random.uniform(self.minAmplitude, self.maxAmplitude)
+                self.start = t
+        return[self.rand]
