@@ -2,7 +2,6 @@ import pyqtgraph as pg
 from scipy import signal
 
 import collections
-import time
 import numpy as np
 
 
@@ -38,7 +37,7 @@ class DynamicPlotter:
 
         self.plot_func = "step"
         self.ref_plot_func = "step"
-        self.maxAmplitude = 0.0
+        self.maxAmplitude = 10.0
         self.minAmplitude = 0.0
         self.maxPeriod = 2*np.pi
         self.minPeriod = 0.1
@@ -132,7 +131,9 @@ class DynamicPlotter:
             self.rand = np.random.uniform(self.minAmplitude, self.maxAmplitude)
             self.start = t
         elif t-self.start >= self.minPeriod:
-            if np.random.randint(0,1) == 1:
-                self.rand = np.random.uniform(self.minAmplitude, self.maxAmplitude)
+            if np.random.randint(0, 1) == 1:
+                self.rand = np.random.uniform(
+                    self.minAmplitude,
+                    self.maxAmplitude)
                 self.start = t
         return[self.rand]

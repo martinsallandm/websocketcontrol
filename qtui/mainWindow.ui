@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>995</width>
-    <height>712</height>
+    <height>750</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_9">
+   <layout class="QHBoxLayout" name="horizontalLayout_15">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_9">
       <item>
@@ -77,6 +77,12 @@
              <widget class="QDoubleSpinBox" name="doubleBoxSetPoint">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="maximum">
+               <double>9999.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>10.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -197,13 +203,13 @@
              <double>0.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>50.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.100000000000000</double>
             </property>
             <property name="value">
-             <double>0.000000000000000</double>
+             <double>10.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -224,7 +230,7 @@
              <bool>false</bool>
             </property>
             <property name="minimum">
-             <double>-50.000000000000000</double>
+             <double>-9999.000000000000000</double>
             </property>
             <property name="maximum">
              <double>0.000000000000000</double>
@@ -248,10 +254,10 @@
           <item>
            <widget class="QDoubleSpinBox" name="doubleBoxMaxPeriod">
             <property name="minimum">
-             <double>0.100000000000000</double>
+             <double>0.010000000000000</double>
             </property>
             <property name="maximum">
-             <double>10.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.100000000000000</double>
@@ -278,10 +284,10 @@
              <bool>false</bool>
             </property>
             <property name="minimum">
-             <double>0.100000000000000</double>
+             <double>0.010000000000000</double>
             </property>
             <property name="maximum">
-             <double>10.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.100000000000000</double>
@@ -305,10 +311,10 @@
           <item>
            <widget class="QDoubleSpinBox" name="doubleBoxOffset">
             <property name="minimum">
-             <double>-1.000000000000000</double>
+             <double>-9999.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>1.000000000000000</double>
+             <double>9999.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.010000000000000</double>
@@ -325,6 +331,31 @@
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <item>
+         <widget class="QLabel" name="controllerFormLabel_2">
+          <property name="text">
+           <string>Output</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBoxOutput">
+          <item>
+           <property name="text">
+            <string>Block I - Red</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Block II - Green</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_13">
@@ -555,7 +586,7 @@
      <x>0</x>
      <y>0</y>
      <width>995</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

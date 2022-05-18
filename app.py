@@ -25,6 +25,15 @@ class ThreadedServer(QRunnable):
         self.plotter = plotter
         self.controller = None
 
+        self.reset_error()
+
+        self.output_index = 0
+
+    def set_output_index(self, i):
+        self.output_index = i
+
+    def reset_error(self):
+
         self.IAE = 0.
         self.ISE = 0.
         self.ITAE = 0.
@@ -50,7 +59,7 @@ class ThreadedServer(QRunnable):
                 received = await websocket.recv()
                 n_refs, refs = self.parse_message(received)
 
-                ref = float(refs[0])
+                ref = float(refs[self.output_index])
 
                 if math.isnan(ref):
                     ref = 0.0
@@ -60,7 +69,7 @@ class ThreadedServer(QRunnable):
                 n_outs, outs = self.parse_message(received)
                 input, refs = self.plotter.update_plot(refs, outs, time.time())
 
-                out = float(outs[0])
+                out = float(outs[self.output_index])
 
                 if self.controller is not None:
                     self.controller.reference(ref)
@@ -205,6 +214,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         )
         self.doubleBoxTi.setValue(self.Ti)
 
+        self.comboBoxOutput.currentIndexChanged.connect(
+            self.change_output
+        )
+
     def init_server(self):
         self.pushButtonConnectServer.setEnabled(False)
         print("started server")
@@ -254,6 +267,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def change_controller(self, i):
         self.controller_label = self.comboBoxController.itemText(i)
 
+    def change_output(self, i):
+        print(f"Output updated to {self.comboBoxOutput.itemText(i)}")
+        self.server.set_output_index(i)
+
     def change_Kp(self, value):
         self.Kp = value
 
@@ -280,6 +297,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 "background-color : lightgrey"
             )
             print("shutdown controller")
+            self.server.reset_error()
         else:
             print(self.controller_label)
             print(self.Kp, self.Kd, self.Ki)
