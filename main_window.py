@@ -102,14 +102,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.labelMaxAmplitude = QtWidgets.QLabel(self.centralWidget)
         self.labelMaxAmplitude.setObjectName("labelMaxAmplitude")
-<<<<<<< HEAD
         self.horizontalLayout_11.addWidget(self.labelMaxAmplitude)
         self.doubleBoxMaxAmplitude = QtWidgets.QDoubleSpinBox(self.centralWidget)
-=======
-        self.verticalLayout_3.addWidget(self.labelMaxAmplitude)
-        self.doubleBoxMaxAmplitude = QtWidgets.QDoubleSpinBox(
-            self.centralWidget)
->>>>>>> 97806f688346b99d4f3da6f7052d895b97da2aa2
         self.doubleBoxMaxAmplitude.setMinimum(0.0)
         self.doubleBoxMaxAmplitude.setMaximum(10000000.0)
         self.doubleBoxMaxAmplitude.setSingleStep(0.1)
@@ -167,16 +161,8 @@ class Ui_MainWindow(object):
         self.doubleBoxOffset.setMaximum(1.0)
         self.doubleBoxOffset.setSingleStep(0.01)
         self.doubleBoxOffset.setObjectName("doubleBoxOffset")
-<<<<<<< HEAD
         self.horizontalLayout_14.addWidget(self.doubleBoxOffset)
         self.verticalLayoutParameters.addLayout(self.horizontalLayout_14)
-=======
-        self.verticalLayout_6.addWidget(self.doubleBoxOffset)
-        spacerItem = QtWidgets.QSpacerItem(
-            20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
-        self.verticalLayout_6.addItem(spacerItem)
-        self.verticalLayoutParameters.addLayout(self.verticalLayout_6)
->>>>>>> 97806f688346b99d4f3da6f7052d895b97da2aa2
         self.verticalLayout_9.addLayout(self.verticalLayoutParameters)
         self.horizontalLine_3 = QtWidgets.QFrame(self.centralWidget)
         self.horizontalLine_3.setFrameShape(QtWidgets.QFrame.Shape.HLine)
