@@ -1,5 +1,7 @@
 import os
+import math
 
+import numpy as np
 from PyQt6 import QtWidgets
 from main_window import Ui_MainWindow
 from dynamic_plotter import DynamicPlotter
@@ -12,6 +14,8 @@ import time
 
 from websockets.exceptions import ConnectionClosedError
 
+from PIDController import PIDController, PI_DController, I_PDController
+
 
 class ThreadedServer(QRunnable):
 
@@ -19,25 +23,76 @@ class ThreadedServer(QRunnable):
         super().__init__()
         self.sampling_time = sampling_time
         self.plotter = plotter
+        self.controller = None
+
+        self.IAE = 0.
+        self.ISE = 0.
+        self.ITAE = 0.
+
+        self.alphas = np.array([0.4, 0.4, 0.2])
+        self.etas = np.zeros_like(self.alphas)
+        self.GoodHart = np.dot(self.alphas, self.etas)
+
+    def set_controller(self, controller):
+        self.controller = controller
 
     async def server_loop(self, websocket):
         while True:
             try:
                 startTime = time.time()
 
+                await asyncio.sleep(self.sampling_time)
+
+                if self.controller is not None:
+                    self.controller.time += self.controller.T
+
                 await websocket.send("get references")
                 received = await websocket.recv()
                 n_refs, refs = self.parse_message(received)
 
+                ref = float(refs[0])
+
+                if math.isnan(ref):
+                    ref = 0.0
+
                 await websocket.send("get outputs")
                 received = await websocket.recv()
                 n_outs, outs = self.parse_message(received)
-                input, ref = self.plotter.update_plot(refs, outs, time.time())
+                input, refs = self.plotter.update_plot(refs, outs, time.time())
 
-                if input is not None:
-                    await websocket.send("set input|"+str(input))
-                if ref is not None:
-                    await websocket.send("set references|"+str(ref[0]))
+                out = float(outs[0])
+
+                if self.controller is not None:
+                    self.controller.reference(ref)
+                    self.controller.measured(out)
+                    u = self.controller.control()
+                    self.controller.apply(u)
+                    await websocket.send("set input|" + f"{u}")
+
+                    self.IAE += np.abs(ref - out)
+                    self.ISE += (out - ref)**2
+                    self.ITAE += self.controller.time * np.abs(ref - out)
+
+                    self.etas[0] += u
+                    self.etas[1] += (u - self.etas[0])**2
+                    self.etas[2] += np.abs(ref - out)
+
+                    self.etas *= self.controller.time
+
+                    self.GoodHart = np.dot(self.alphas, self.etas)
+
+                    print(
+                        "IAE=%.2f ISE=%.2f ITAE=%.2f GoodHeart=%.2f" % (
+                            self.IAE, self.ISE, self.ITAE, self.GoodHart
+                            )
+                        )
+
+                else:
+                    if input is not None:
+                        await websocket.send("set input|" + str(input))
+
+                if refs is not None:
+                    await websocket.send("set references|" + str(refs[0]))
 
                 ellapsedTime = 0.0
                 while ellapsedTime < self.sampling_time:
@@ -63,6 +118,14 @@ class ThreadedServer(QRunnable):
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+
+    controller_label = "PID"
+    Kp = 0.01
+    Ki = 0.01
+    Kd = 0.01
+    Td = Kd/Kp
+    Ti = Kp/Ki
+
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
@@ -74,6 +137,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.threadpool = QThreadPool()
 
         self.server = ThreadedServer(0.01, self.dynamic_plotter)
+
+        self.is_controlling = False
 
         print(
             "Multithreading with maximum %d threads"
@@ -113,6 +178,32 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.doubleBoxOffset.valueChanged.connect(
             self.change_offset
         )
+
+        self.pushButtonControl.clicked.connect(
+            self.init_controller
+        )
+
+        self.comboBoxController.currentIndexChanged.connect(
+            self.change_controller
+        )
+        self.doubleBoxKp.valueChanged.connect(
+            self.change_Kp
+        )
+        self.doubleBoxKp.setValue(self.Kp)
+        self.doubleBoxKd.valueChanged.connect(
+            self.change_Kd
+        )
+        self.doubleBoxKi.valueChanged.connect(
+            self.change_Ki
+        )
+        self.doubleBoxTd.valueChanged.connect(
+            self.change_Td
+        )
+        self.doubleBoxTd.setValue(self.Td)
+        self.doubleBoxTi.valueChanged.connect(
+            self.change_Ti
+        )
+        self.doubleBoxTi.setValue(self.Ti)
 
     def init_server(self):
         self.pushButtonConnectServer.setEnabled(False)
@@ -159,6 +250,57 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def change_offset(self, value):
         self.dynamic_plotter.set_offset(value)
+
+    def change_controller(self, i):
+        self.controller_label = self.comboBoxController.itemText(i)
+
+    def change_Kp(self, value):
+        self.Kp = value
+
+    def change_Kd(self, value):
+        self.Kd = value
+
+    def change_Ki(self, value):
+        self.Ki = value
+
+    def change_Td(self, value):
+        self.Td = value
+        self.Kd = self.Kp * self.Td
+        self.doubleBoxKd.setValue(self.Kd)
+
+    def change_Ti(self, value):
+        self.Ti = value
+        self.Ki = self.Kp / self.Ti
+        self.doubleBoxKi.setValue(self.Ki)
+
+    def init_controller(self):
+        if self.is_controlling:
+            self.server.set_controller(None)
+            self.pushButtonControl.setStyleSheet(
+                "background-color : lightgrey"
+            )
+            print("shutdown controller")
+        else:
+            print(self.controller_label)
+            print(self.Kp, self.Kd, self.Ki)
+            if self.controller_label == "PID":
+                controller = PIDController(
+                    Kp=self.Kd, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
+                )
+            elif self.controller_label == "PI-D":
+                controller = PI_DController(
+                    Kp=self.Kd, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
+                )
+            else:
+                controller = I_PDController(
+                    Kp=self.Kd, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
+                )
+            self.server.set_controller(controller)
+            self.pushButtonControl.setStyleSheet(
+                "background-color : lightblue"
+            )
+            print("start controller")
+        self.is_controlling = not self.is_controlling
 
     def closeEvent(self, event):
         os._exit(1)

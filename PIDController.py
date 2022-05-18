@@ -1,4 +1,4 @@
-from ControlLib import RemoteControl
+from ControlLib import RemoteControl, Control
 
 
 class PIDController(Control):
