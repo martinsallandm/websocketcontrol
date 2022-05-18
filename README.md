@@ -43,9 +43,9 @@ Entretanto, o iDynamic se mostrou apenas compatível com o websockets, encerrand
 qualquer comunicação via socket rapidamente. Portanto, adaptou-se um servidor 
 websockets a arquitetura do projeto.
 
-# Arquitetura
+# Arquitetura inicial
 
-O projeto é estruturado com [threading](https://docs.python.org/3/library/threading.html). Uma thread faz a comunicação com o iDynamic e outra controla
+Primeiramente, o projeto é estruturado com [threading](https://docs.python.org/3/library/threading.html). Uma thread faz a comunicação com o iDynamic e outra controla
 a interface gráfica. Essa escolha foi tomada devido ao delay que seria demasiado no caso de um processamento single thread.
 
 Como o websockets é baseado em [asyncio](https://docs.python.org/3/library/asyncio.html) que é uma biblioteca pensada em processos concorrentes em single thread, sua implementação com múltiplas threads foi um tanto custosa.
@@ -54,14 +54,24 @@ Por fim, a comunicação com o iDynamic foi feita com websockets, rodando na thr
 principal. Uma thread secundária roda a interface gráfica. A comunicação entre 
 as duas threads é feita através de [queues](https://docs.python.org/3/library/queue.html).
 
-Mais detalhes da arquitetura na imagem a seguir:
+# Arquitetura atual
 
-![architeture](./images/architeture.jpg)
+O projeto acabou tendo conflitos entre as threads, queues, servidor e interface gráfica. Além de 
+um código "macarrônico", com um fluxo de execução confuso. Sendo necessária uma reformulação.
+A arquitetura atual consiste em subthreads a partir do PyQt, uma especifica para o servidor e outra para contolar a interface gráfica, sem uso de queues. Visto que todas as variáveis são acessíveis por uma mesma classe.
 
 # Interface gráfica
 
 A interface gráfica foi desenvolvia com [PyQt6](https://wiki.python.org/moin/PyQt), utilizando-se como guia [tutorial](https://www.pythonguis.com/pyqt6-tutorial/). A IDE [QT Creator](https://www.qt.io/product/development-tools)
 foi utilizada para fácil desenvolvimento e prototipação da interface de usuário. Os gráficos foram desenvolvidos com [PyQtGraph](https://www.pyqtgraph.org/), baseando-se no exemplo encontrado em [python-live-plotting](https://github.com/ap--/python-live-plotting/blob/master/plot_pyqtgraph.py).
+
+# Malha Aberta e Fechada
+
+É possível selecionar o sistema como malha aberta ou malha fechada. Em caso de malha aberta, uma curva de entrada é aplicada diretamente ao sistema. Já no caso de malha fechada, é aplicado como entrada do sistema a curva de referência menos a saída anterior do sistema. 
+
+# Controlador PID
+
+É possível aplicar um controlador Proporcional Integrador Derivativo no sistema, regulando os ganhos para a melhor resposta, seja em tempo de convergência, overshoot, tempo de subida.
 
 # Setup inicial
 
@@ -73,11 +83,12 @@ $ pip install -r requeriments.txt
 
 # Rodar o servidor
 ```console
-$ python3 test.py
+$ python3 main.py
 ```
+Clique em *Connect to Server*
 Em seguida, abra o [simulador](https://dev-mind.blog/apps/control_systems/iDynamic/system6.html). Clique em *Control* e em *Play*.
 
-Selecione a forma de onda de entrada e altere a amplitude.
+Selecione a forma de onda de entrada e altere a amplitude, selecione se a malha é aberta ou fechada e o uso do controlador.
 
 ![print](images/graph.jpg)
 
