@@ -26,7 +26,8 @@ class Ui_MainWindow(object):
         self.verticalLayoutControl.addWidget(self.labelControlSystem)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.pushButtonConnectServer = QtWidgets.QPushButton(self.centralWidget)
+        self.pushButtonConnectServer = QtWidgets.QPushButton(
+            self.centralWidget)
         self.pushButtonConnectServer.setObjectName("pushButtonConnectServer")
         self.horizontalLayout.addWidget(self.pushButtonConnectServer)
         self.verticalLayoutControl.addLayout(self.horizontalLayout)
@@ -79,8 +80,10 @@ class Ui_MainWindow(object):
         self.referenceWaveFormLabel = QtWidgets.QLabel(self.centralWidget)
         self.referenceWaveFormLabel.setObjectName("referenceWaveFormLabel")
         self.verticalLayout_8.addWidget(self.referenceWaveFormLabel)
-        self.comboBoxReferenceWaveForm = QtWidgets.QComboBox(self.centralWidget)
-        self.comboBoxReferenceWaveForm.setObjectName("comboBoxReferenceWaveForm")
+        self.comboBoxReferenceWaveForm = QtWidgets.QComboBox(
+            self.centralWidget)
+        self.comboBoxReferenceWaveForm.setObjectName(
+            "comboBoxReferenceWaveForm")
         self.comboBoxReferenceWaveForm.addItem("")
         self.comboBoxReferenceWaveForm.addItem("")
         self.comboBoxReferenceWaveForm.addItem("")
@@ -99,10 +102,16 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.labelMaxAmplitude = QtWidgets.QLabel(self.centralWidget)
         self.labelMaxAmplitude.setObjectName("labelMaxAmplitude")
+<<<<<<< HEAD
         self.horizontalLayout_11.addWidget(self.labelMaxAmplitude)
         self.doubleBoxMaxAmplitude = QtWidgets.QDoubleSpinBox(self.centralWidget)
+=======
+        self.verticalLayout_3.addWidget(self.labelMaxAmplitude)
+        self.doubleBoxMaxAmplitude = QtWidgets.QDoubleSpinBox(
+            self.centralWidget)
+>>>>>>> 97806f688346b99d4f3da6f7052d895b97da2aa2
         self.doubleBoxMaxAmplitude.setMinimum(0.0)
-        self.doubleBoxMaxAmplitude.setMaximum(50.0)
+        self.doubleBoxMaxAmplitude.setMaximum(10000000.0)
         self.doubleBoxMaxAmplitude.setSingleStep(0.1)
         self.doubleBoxMaxAmplitude.setProperty("value", 0.0)
         self.doubleBoxMaxAmplitude.setObjectName("doubleBoxMaxAmplitude")
@@ -115,7 +124,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_12.addWidget(self.labelMinAmplitude)
         self.doubleBoxMinAmplitude = QtWidgets.QDoubleSpinBox(self.centralWidget)
         self.doubleBoxMinAmplitude.setEnabled(False)
-        self.doubleBoxMinAmplitude.setMinimum(-50.0)
+        self.doubleBoxMinAmplitude.setMinimum(-10000000.0)
         self.doubleBoxMinAmplitude.setMaximum(0.0)
         self.doubleBoxMinAmplitude.setSingleStep(0.1)
         self.doubleBoxMinAmplitude.setObjectName("doubleBoxMinAmplitude")
@@ -158,8 +167,16 @@ class Ui_MainWindow(object):
         self.doubleBoxOffset.setMaximum(1.0)
         self.doubleBoxOffset.setSingleStep(0.01)
         self.doubleBoxOffset.setObjectName("doubleBoxOffset")
+<<<<<<< HEAD
         self.horizontalLayout_14.addWidget(self.doubleBoxOffset)
         self.verticalLayoutParameters.addLayout(self.horizontalLayout_14)
+=======
+        self.verticalLayout_6.addWidget(self.doubleBoxOffset)
+        spacerItem = QtWidgets.QSpacerItem(
+            20, 40, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.verticalLayout_6.addItem(spacerItem)
+        self.verticalLayoutParameters.addLayout(self.verticalLayout_6)
+>>>>>>> 97806f688346b99d4f3da6f7052d895b97da2aa2
         self.verticalLayout_9.addLayout(self.verticalLayoutParameters)
         self.horizontalLine_3 = QtWidgets.QFrame(self.centralWidget)
         self.horizontalLine_3.setFrameShape(QtWidgets.QFrame.Shape.HLine)
@@ -288,26 +305,39 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.labelControlSystem.setText(_translate("MainWindow", "Control System"))
-        self.pushButtonConnectServer.setText(_translate("MainWindow", "Connect to Server"))
+        self.labelControlSystem.setText(
+            _translate("MainWindow", "Control System"))
+        self.pushButtonConnectServer.setText(
+            _translate("MainWindow", "Connect to Server"))
         self.labelLoop.setText(_translate("MainWindow", "Loop"))
         self.comboBoxLoop.setItemText(0, _translate("MainWindow", "Open"))
         self.comboBoxLoop.setItemText(1, _translate("MainWindow", "Closed"))
         self.labelSetPoint.setText(_translate("MainWindow", "Set Point"))
-        self.inputWaveFormLabel.setText(_translate("MainWindow", "Input Wave Form"))
+        self.inputWaveFormLabel.setText(
+            _translate("MainWindow", "Input Wave Form"))
         self.comboBoxWaveForm.setItemText(0, _translate("MainWindow", "step"))
         self.comboBoxWaveForm.setItemText(1, _translate("MainWindow", "sine"))
-        self.comboBoxWaveForm.setItemText(2, _translate("MainWindow", "square"))
-        self.comboBoxWaveForm.setItemText(3, _translate("MainWindow", "sawtooth"))
-        self.comboBoxWaveForm.setItemText(4, _translate("MainWindow", "random"))
-        self.referenceWaveFormLabel.setText(_translate("MainWindow", "Reference Wave Form"))
-        self.comboBoxReferenceWaveForm.setItemText(0, _translate("MainWindow", "step"))
-        self.comboBoxReferenceWaveForm.setItemText(1, _translate("MainWindow", "sine"))
-        self.comboBoxReferenceWaveForm.setItemText(2, _translate("MainWindow", "square"))
-        self.comboBoxReferenceWaveForm.setItemText(3, _translate("MainWindow", "sawtooth"))
-        self.comboBoxReferenceWaveForm.setItemText(4, _translate("MainWindow", "random"))
+        self.comboBoxWaveForm.setItemText(
+            2, _translate("MainWindow", "square"))
+        self.comboBoxWaveForm.setItemText(
+            3, _translate("MainWindow", "sawtooth"))
+        self.comboBoxWaveForm.setItemText(
+            4, _translate("MainWindow", "random"))
+        self.referenceWaveFormLabel.setText(
+            _translate("MainWindow", "Reference Wave Form"))
+        self.comboBoxReferenceWaveForm.setItemText(
+            0, _translate("MainWindow", "step"))
+        self.comboBoxReferenceWaveForm.setItemText(
+            1, _translate("MainWindow", "sine"))
+        self.comboBoxReferenceWaveForm.setItemText(
+            2, _translate("MainWindow", "square"))
+        self.comboBoxReferenceWaveForm.setItemText(
+            3, _translate("MainWindow", "sawtooth"))
+        self.comboBoxReferenceWaveForm.setItemText(
+            4, _translate("MainWindow", "random"))
         self.labelMaxAmplitude.setText(_translate("MainWindow", "Amplitude"))
-        self.labelMinAmplitude.setText(_translate("MainWindow", "Min Amplitude"))
+        self.labelMinAmplitude.setText(
+            _translate("MainWindow", "Min Amplitude"))
         self.labelMaxPeriod.setText(_translate("MainWindow", "Period"))
         self.labelMinPeriod.setText(_translate("MainWindow", "Min Period"))
         self.labelOffset.setText(_translate("MainWindow", "Offset"))
