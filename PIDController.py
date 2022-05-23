@@ -17,8 +17,7 @@ class PIDController(Control):
 
         P = self.Kp * self.e(0)
         self.I = self.I + self.Ki * self.e(0) * self.T
-        D = self.Kd * (self.e(0) - self.e(-1)) / self.T
-
+        D = self.Kd * (self.e(0) - self.e(-1))
         return P + self.I + D
 
 
