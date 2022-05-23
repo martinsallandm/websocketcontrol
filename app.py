@@ -59,7 +59,7 @@ class ThreadedServer(QRunnable):
                 received = await websocket.recv()
                 n_refs, refs = self.parse_message(received)
 
-                ref = float(refs[self.output_index])
+                ref = float(refs[0])
 
                 if math.isnan(ref):
                     ref = 0.0
@@ -77,7 +77,6 @@ class ThreadedServer(QRunnable):
                     u = self.controller.control()
                     self.controller.apply(u)
                     await websocket.send("set input|" + f"{u}")
-
                     self.IAE += np.abs(ref - out)
                     self.ISE += (out - ref)**2
                     self.ITAE += self.controller.time * np.abs(ref - out)
@@ -303,15 +302,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             print(self.Kp, self.Kd, self.Ki)
             if self.controller_label == "PID":
                 controller = PIDController(
-                    Kp=self.Kd, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
+                    Kp=self.Kp, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
                 )
             elif self.controller_label == "PI-D":
                 controller = PI_DController(
-                    Kp=self.Kd, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
+                    Kp=self.Kp, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
                 )
             else:
                 controller = I_PDController(
-                    Kp=self.Kd, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
+                    Kp=self.Kp, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
                 )
             self.server.set_controller(controller)
             self.pushButtonControl.setStyleSheet(
