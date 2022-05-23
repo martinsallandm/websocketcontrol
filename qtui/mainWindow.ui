@@ -64,30 +64,6 @@
             </item>
            </layout>
           </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_1">
-            <item>
-             <widget class="QLabel" name="labelSetPoint">
-              <property name="text">
-               <string>Set Point</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="doubleBoxSetPoint">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="maximum">
-               <double>9999.000000000000000</double>
-              </property>
-              <property name="value">
-               <double>10.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </item>
        </layout>
@@ -586,7 +562,7 @@
      <x>0</x>
      <y>0</y>
      <width>995</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
