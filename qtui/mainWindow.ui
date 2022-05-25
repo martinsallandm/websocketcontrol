@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>995</width>
+    <width>1200</width>
     <height>750</height>
    </rect>
   </property>
@@ -14,9 +14,9 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_15">
+   <layout class="QHBoxLayout" name="horizontalLayout_23">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_9">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutControl">
         <item>
@@ -334,41 +334,126 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_13">
+       <layout class="QVBoxLayout" name="verticalLayout_10">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_10">
+         <widget class="QLabel" name="controllerFormLabel">
+          <property name="text">
+           <string>Controller</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <widget class="QLabel" name="controllerFormLabel">
-            <property name="text">
-             <string>Controller</string>
-            </property>
+           <widget class="QComboBox" name="comboBoxController">
+            <item>
+             <property name="text">
+              <string>PID</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>PI-D</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>I-PD</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <widget class="QPushButton" name="pushButtonControl">
+            <property name="text">
+             <string>Control</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_11">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QComboBox" name="comboBoxController">
-              <item>
-               <property name="text">
-                <string>PID</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PI-D</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>I-PD</string>
-               </property>
-              </item>
+             <widget class="QLabel" name="controllerKpLabel">
+              <property name="text">
+               <string>Kp</string>
+              </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButtonControl">
+             <widget class="QDoubleSpinBox" name="doubleBoxKp">
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>50.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="controllerKdLabel">
               <property name="text">
-               <string>Control</string>
+               <string>Kd</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="doubleBoxKd">
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>50.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QLabel" name="controllerKiLabel">
+              <property name="text">
+               <string>Ki</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="doubleBoxKi">
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>50.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -377,166 +462,77 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <layout class="QVBoxLayout" name="verticalLayout_12">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_11">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <widget class="QLabel" name="controllerKpLabel">
-                <property name="text">
-                 <string>Kp</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleBoxKp">
-                <property name="minimum">
-                 <double>0.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>50.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.100000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <widget class="QLabel" name="controllerTdLabel">
+              <property name="text">
+               <string>Td</string>
+              </property>
+             </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <widget class="QLabel" name="controllerKdLabel">
-                <property name="text">
-                 <string>Kd</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleBoxKd">
-                <property name="minimum">
-                 <double>0.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>50.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.100000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <widget class="QLabel" name="controllerKiLabel">
-                <property name="text">
-                 <string>Ki</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleBoxKi">
-                <property name="minimum">
-                 <double>0.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>50.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.100000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <widget class="QDoubleSpinBox" name="doubleBoxTd">
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>50.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_12">
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
-              <item>
-               <widget class="QLabel" name="controllerTdLabel">
-                <property name="text">
-                 <string>Td</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleBoxTd">
-                <property name="minimum">
-                 <double>0.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>50.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.100000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <widget class="QLabel" name="controllerTdLabel_2">
+              <property name="text">
+               <string>Ti</string>
+              </property>
+             </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
-              <item>
-               <widget class="QLabel" name="controllerTdLabel_2">
-                <property name="text">
-                 <string>Ti</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="doubleBoxTi">
-                <property name="minimum">
-                 <double>0.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>50.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.100000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <widget class="QDoubleSpinBox" name="doubleBoxTi">
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>50.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
          </layout>
         </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
        </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -548,10 +544,129 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="graphWidgetLayout">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_22">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QLabel" name="labelIAE">
+              <property name="text">
+               <string>IAE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLCDNumber" name="lcdNumberIAE">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(0, 255, 0);</string>
+              </property>
+              <property name="smallDecimalPoint">
+               <bool>false</bool>
+              </property>
+              <property name="digitCount">
+               <number>10</number>
+              </property>
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QLabel" name="labelISE">
+              <property name="text">
+               <string>ISE</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLCDNumber" name="lcdNumberISE">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(0, 255, 0);</string>
+              </property>
+              <property name="digitCount">
+               <number>10</number>
+              </property>
+              <property name="segmentStyle">
+               <enum>QLCDNumber::Flat</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_21">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_18">
+          <item>
+           <widget class="QLabel" name="labeITAE">
+            <property name="text">
+             <string>ITAE</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLCDNumber" name="lcdNumberITAE">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(0, 255, 0);</string>
+            </property>
+            <property name="digitCount">
+             <number>10</number>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_20">
+          <item>
+           <widget class="QLabel" name="labeIGoodHeart">
+            <property name="text">
+             <string>Goodhart</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLCDNumber" name="lcdNumberGoodHeart">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(0, 0, 0);
+color: rgb(0, 255, 0);</string>
+            </property>
+            <property name="digitCount">
+             <number>10</number>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="graphWidgetLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+       </layout>
+      </item>
      </layout>
     </item>
    </layout>
@@ -561,7 +676,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>995</width>
+     <width>1200</width>
      <height>21</height>
     </rect>
    </property>

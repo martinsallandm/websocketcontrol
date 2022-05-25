@@ -25,25 +25,17 @@ class ThreadedServer(QRunnable):
         self.plotter = plotter
         self.controller = None
 
-        self.reset_error()
-
         self.output_index = 0
 
     def set_output_index(self, i):
         self.output_index = i
 
-    def reset_error(self):
-
-        self.IAE = 0.
-        self.ISE = 0.
-        self.ITAE = 0.
-
-        self.alphas = np.array([0.4, 0.4, 0.2])
-        self.etas = np.zeros_like(self.alphas)
-        self.GoodHart = np.dot(self.alphas, self.etas)
-
-    def set_controller(self, controller):
+    def set_controller(self, controller, app):
         self.controller = controller
+        self.lcdNumberIAE = app.lcdNumberIAE
+        self.lcdNumberISE = app.lcdNumberISE
+        self.lcdNumberITAE = app.lcdNumberITAE
+        self.lcdNumberGoodHeart = app.lcdNumberGoodHeart
 
     async def server_loop(self, websocket):
         while True:
@@ -77,24 +69,11 @@ class ThreadedServer(QRunnable):
                     u = self.controller.control()
                     self.controller.apply(u)
                     await websocket.send("set input|" + f"{u}")
-                    self.IAE += np.abs(ref - out)
-                    self.ISE += (out - ref)**2
-                    self.ITAE += self.controller.time * np.abs(ref - out)
-
-                    self.etas[0] += u
-                    self.etas[1] += (u - self.etas[0])**2
-                    self.etas[2] += np.abs(ref - out)
-
-                    self.etas *= self.controller.time
-
-                    self.GoodHart = np.dot(self.alphas, self.etas)
-
-                    print(
-                        "IAE=%.2f ISE=%.2f ITAE=%.2f GoodHeart=%.2f" % (
-                            self.IAE, self.ISE, self.ITAE, self.GoodHart
-                            )
-                        )
-
+                    metrics = self.controller.error_metrics()
+                    self.lcdNumberIAE.display(metrics["IAE"])
+                    self.lcdNumberISE.display(metrics["ISE"])
+                    self.lcdNumberITAE.display(metrics["ITAE"])
+                    self.lcdNumberGoodHeart.display(metrics["GoodHeart"])
                 else:
                     if input is not None:
                         await websocket.send("set input|" + str(input))
@@ -291,12 +270,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def init_controller(self):
         if self.is_controlling:
-            self.server.set_controller(None)
+            self.server.set_controller(None, self)
             self.pushButtonControl.setStyleSheet(
                 "background-color : lightgrey"
             )
             print("shutdown controller")
-            self.server.reset_error()
         else:
             print(self.controller_label)
             print(self.Kp, self.Kd, self.Ki)
@@ -312,7 +290,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 controller = I_PDController(
                     Kp=self.Kp, Ki=self.Ki, Kd=self.Kd, T=0.01, order=3
                 )
-            self.server.set_controller(controller)
+            self.server.set_controller(controller, self)
             self.pushButtonControl.setStyleSheet(
                 "background-color : lightblue"
             )

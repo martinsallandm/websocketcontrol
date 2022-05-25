@@ -1,3 +1,5 @@
+import numpy as np
+
 from ControlLib import RemoteControl, Control
 
 
@@ -11,6 +13,14 @@ class PIDController(Control):
 
         self.I = 0.
 
+        self.IAE = 0.
+        self.ISE = 0.
+        self.ITAE = 0.
+
+        self.alphas = np.array([0.4, 0.4, 0.2])
+        self.etas = np.zeros_like(self.alphas)
+        self.GoodHart = np.dot(self.alphas, self.etas)
+
         super().__init__(T, order)
 
     def control(self):
@@ -19,6 +29,29 @@ class PIDController(Control):
         self.I = self.I + self.Ki * self.e(0) * self.T
         D = self.Kd * (self.e(0) - self.e(-1))
         return P + self.I + D
+
+    def error_metrics(self):
+        e = self.e(0)
+        u = self.u(0)
+
+        self.IAE += np.abs(e)
+        self.ISE += e**2
+        self.ITAE += self.time * np.abs(e)
+
+        self.etas[0] += u
+        self.etas[1] += (u - self.etas[0])**2
+        self.etas[2] += np.abs(e)
+
+        self.etas *= self.time
+
+        self.GoodHart = np.dot(self.alphas, self.etas)
+
+        return {
+            "IAE": "%.2f" % self.IAE,
+            "ISE": "%.2f" % self.ISE,
+            "ITAE": "%.2f" % self.ITAE,
+            "GoodHeart": "%.2f" % self.GoodHart
+        }
 
 
 class PI_DController(PIDController):
@@ -43,10 +76,3 @@ class I_PDController(PIDController):
         self.I = self.I + self.Ki * self.e(0) * self.T
         D = self.Kd * (self.y(0) - self.y(-1))
         return P + self.I + D
-
-
-if __name__ == "__main__":
-
-    pid_controller = PIDController(Kp=8.23, Ki=31.35, Kd=0.54, T=0.01, order=3)
-    rc = RemoteControl(pid_controller)
-    rc.run()
